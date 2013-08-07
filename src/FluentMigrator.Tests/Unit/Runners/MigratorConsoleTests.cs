@@ -205,5 +205,51 @@ namespace FluentMigrator.Tests.Unit.Runners
 
             CollectionAssert.AreEquivalent(expectedTags, migratorConsole.RunnerContext.Tags);   
         }
+
+        [Test]
+        public void TransactionPerSessionShouldBeSetOnRunnerContextWithShortSwitch()
+        {
+            var console = new MigratorConsole(
+                "/db", database,
+                "/connection", connection,
+                "/target", target,
+                "/task", "migrate:up",
+                "/tps");
+
+            console.TransactionPerSession.ShouldBeTrue();
+            console.RunnerContext.TransactionPerSession.ShouldBeTrue();
+        }
+
+        [Test]
+        public void TransactionPerSessionShouldBeSetOnRunnerContextWithLongSwitch()
+        {
+            var console = new MigratorConsole(
+                "/db", database,
+                "/connection", connection,
+                "/target", target,
+                "/task", "migrate:up",
+                "/transaction-per-session");
+
+            console.TransactionPerSession.ShouldBeTrue();
+            console.RunnerContext.TransactionPerSession.ShouldBeTrue();
+        }
+
+        [Test]
+        public void ProviderSwitchesPassedToRunnerContextOnExecuteMigrations()
+        {
+            var migratorConsole = new MigratorConsole(
+                "/db", database,
+                "/connection", connection,
+                "/target", target,
+                "/output",
+                "/namespace", "FluentMigrator.Tests.Unit.Runners.Migrations",
+                "/task", "migrate:up",
+                "/version", "0",
+                "/providerswitches", "QuotedIdentifiers=true");
+
+            const string ExpectedProviderSwitces = "QuotedIdentifiers=true";
+
+            CollectionAssert.AreEquivalent(ExpectedProviderSwitces, migratorConsole.RunnerContext.ProviderSwitches);
+        }
     }
 }

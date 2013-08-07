@@ -170,6 +170,14 @@ namespace FluentMigrator.Tests.Unit
         {
             [Test]
             [Category("Tagging")]
+            public void WhenTypeHasTagAttributeButNoTagsPassedInReturnsFalse()
+            {
+                DefaultMigrationConventions.TypeHasMatchingTags(typeof(TaggedWithUk), new string[] { })
+                    .ShouldBeFalse();
+            }
+
+            [Test]
+            [Category("Tagging")]
             public void WhenTypeHasTagAttributeWithNoTagNamesReturnsFalse()
             {
                 DefaultMigrationConventions.TypeHasMatchingTags(typeof(HasTagAttributeWithNoTagNames), new string[] { })
@@ -239,6 +247,29 @@ namespace FluentMigrator.Tests.Unit
                 DefaultMigrationConventions.TypeHasMatchingTags(typeof(TaggedWithBeAndUkAndProductionAndStagingInTwoTagsAttributes), new[] { "UK", "IE" })
                     .ShouldBeFalse();
             }
+        }
+
+        [FluentMigrator.Migration(20130508175300)]
+        class AutoScriptMigrationFake : AutoScriptMigration { }
+
+        [Test]
+        public void GetAutoScriptUpName()
+        {
+            var type = typeof(AutoScriptMigrationFake);
+            var databaseType = "sqlserver";
+
+            DefaultMigrationConventions.GetAutoScriptUpName(type, databaseType)
+                .ShouldBe("Scripts.Up.20130508175300_AutoScriptMigrationFake_sqlserver.sql");
+        }
+
+        [Test]
+        public void GetAutoScriptDownName()
+        {
+            var type = typeof(AutoScriptMigrationFake);
+            var databaseType = "sqlserver";
+
+            DefaultMigrationConventions.GetAutoScriptDownName(type, databaseType)
+                .ShouldBe("Scripts.Down.20130508175300_AutoScriptMigrationFake_sqlserver.sql");
         }
     }
 

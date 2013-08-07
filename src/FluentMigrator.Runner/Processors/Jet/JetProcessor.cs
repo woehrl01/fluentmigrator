@@ -7,8 +7,10 @@ namespace FluentMigrator.Runner.Processors.Jet
 {
     public class JetProcessor : ProcessorBase
     {
+        private readonly string connectionString;
         public OleDbConnection Connection { get; protected set; }
         public OleDbTransaction Transaction { get; protected set; }
+        public override string ConnectionString { get { return connectionString; } }
 
         public override string DatabaseType
         {
@@ -19,6 +21,10 @@ namespace FluentMigrator.Runner.Processors.Jet
             : base(generator, announcer, options)
         {
             Connection = connection;
+
+            // Prefetch connectionstring as after opening the security info could no longer be present
+            // for instance on sql server
+            connectionString = connection.ConnectionString;
         }
 
         protected void EnsureConnectionIsOpen()
@@ -170,6 +176,11 @@ namespace FluentMigrator.Runner.Processors.Jet
             {
                 return indexes.Rows.Count > 0;
             }
+        }
+
+        public override bool DefaultValueExists(string schemaName, string tableName, string columnName, object defaultValue)
+        {
+            return false;
         }
 
         public override void BeginTransaction()

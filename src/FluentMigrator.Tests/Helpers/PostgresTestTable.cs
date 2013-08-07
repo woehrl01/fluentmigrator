@@ -24,7 +24,7 @@ namespace FluentMigrator.Tests.Helpers
 
         }
 
-        public PostgresTestTable(string schemaName, string tableName, PostgresProcessor processor, params string[] columnDefinitions)
+        public PostgresTestTable(string tableName, PostgresProcessor processor, string schemaName, params string[] columnDefinitions)
         {
             _schemaName = schemaName;
 
@@ -80,6 +80,13 @@ namespace FluentMigrator.Tests.Helpers
                 sb.AppendFormat(";DROP SCHEMA \"{0}\"", _schemaName);
 
             using (var command = new NpgsqlCommand(sb.ToString(), Connection, Transaction))
+                command.ExecuteNonQuery();
+        }
+
+        public void WithDefaultValueOn(string column)
+        {
+            const int defaultValue = 1;
+            using (var command = new NpgsqlCommand(string.Format(" ALTER TABLE {0}.{1} ALTER {2} SET DEFAULT {3}", quoter.QuoteSchemaName(_schemaName), quoter.QuoteTableName(Name), quoter.QuoteColumnName(column), defaultValue), Connection, Transaction))
                 command.ExecuteNonQuery();
         }
     }

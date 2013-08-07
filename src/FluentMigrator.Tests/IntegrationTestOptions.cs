@@ -19,7 +19,7 @@ namespace FluentMigrator.Tests
         public static DatabaseServerOptions SqlServer2012 = new DatabaseServerOptions
         {
             ConnectionString = @"server=.\SQLEXPRESS;uid=test;pwd=test;Trusted_Connection=yes;database=FluentMigrator",
-            IsEnabled = false
+            IsEnabled = false 
         };
 
         public static DatabaseServerOptions SqlServerCe = new DatabaseServerOptions

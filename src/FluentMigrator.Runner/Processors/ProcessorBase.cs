@@ -27,6 +27,8 @@ namespace FluentMigrator.Runner.Processors
         protected readonly IAnnouncer Announcer;
         public IMigrationProcessorOptions Options { get; private set; }
 
+        public abstract string ConnectionString { get; }
+
         public abstract string DatabaseType { get; }
 
         public bool WasCommitted { get; protected set; }
@@ -193,6 +195,8 @@ namespace FluentMigrator.Runner.Processors
         public abstract bool IndexExists(string schemaName, string tableName, string indexName);
 
         public abstract bool SequenceExists(string schemaName, string sequenceName);
+
+        public abstract bool DefaultValueExists(string schemaName, string tableName, string columnName, object defaultValue);
 
         public void Dispose()
         {

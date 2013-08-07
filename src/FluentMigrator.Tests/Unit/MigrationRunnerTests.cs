@@ -59,6 +59,7 @@ namespace FluentMigrator.Tests.Unit
 
             _announcer = new Mock<IAnnouncer>();
             _stopWatch = new Mock<IStopWatch>();
+            _stopWatch.Setup(x => x.Time(It.IsAny<Action>())).Returns(new TimeSpan(1)).Callback((Action a) => a.Invoke());
 
             var options = new ProcessorOptions
                             {
@@ -66,6 +67,7 @@ namespace FluentMigrator.Tests.Unit
                             };
 
             _processorMock.SetupGet(x => x.Options).Returns(options);
+            _processorMock.SetupGet(x => x.ConnectionString).Returns(IntegrationTestOptions.SqlServer2008.ConnectionString);
 
             _runnerContextMock.SetupGet(x => x.Namespace).Returns("FluentMigrator.Tests.Integration.Migrations");
             _runnerContextMock.SetupGet(x => x.Announcer).Returns(_announcer.Object);
@@ -119,6 +121,16 @@ namespace FluentMigrator.Tests.Unit
             Assert.AreEqual(_applicationContext, _runnerContextMock.Object.ApplicationContext, "The runner context does not have the expected application context.");
             Assert.AreEqual(_applicationContext, _runner.ApplicationContext, "The MigrationRunner does not have the expected application context.");
             Assert.AreEqual(_applicationContext, migration.ApplicationContext, "The migration does not have the expected application context.");
+            _announcer.VerifyAll();
+        }
+
+        [Test]
+        public void CanPassConnectionString()
+        {
+            IMigration migration = new TestEmptyMigration();
+            _runner.Up(migration);
+
+            Assert.AreEqual(IntegrationTestOptions.SqlServer2008.ConnectionString, migration.ConnectionString, "The migration does not have the expected connection string.");
             _announcer.VerifyAll();
         }
 
@@ -185,17 +197,9 @@ namespace FluentMigrator.Tests.Unit
         {
             _processorMock.Setup(x => x.Process(It.IsAny<CreateTableExpression>())).Throws(new Exception("Oops"));
 
-            _announcer.Setup(x => x.Error(It.IsRegex(containsAll("Oops"))));
-
-            try
-            {
-                _runner.Up(new TestMigration());
-            }
-            catch (Exception)
-            {
-            }
-
-            _announcer.VerifyAll();
+            var exception = Assert.Throws<Exception>(() => _runner.Up(new TestMigration()));
+            
+            Assert.That(exception.Message, Is.StringContaining("Oops"));
         }
 
         [Test]

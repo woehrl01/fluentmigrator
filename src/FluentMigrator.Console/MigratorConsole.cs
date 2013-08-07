@@ -49,6 +49,8 @@ namespace FluentMigrator.Console
         public bool Verbose;
         public long Version;
         public string WorkingDirectory;
+        public bool TransactionPerSession;
+        public string ProviderSwitches;
 
         public RunnerContext RunnerContext { get; private set;}
 
@@ -160,9 +162,19 @@ namespace FluentMigrator.Console
                                             v => { Tags.Add(v); }
                                             },
                                         {
+                                            "providerswitches=",
+                                            "Provider specific switches",
+                                            v => { ProviderSwitches = v; }
+                                            },
+                                        {
                                             "help|h|?",
                                             "Displays this help menu.",
                                             v => { ShowHelp = true; }
+                                            },
+                                        {
+                                            "transaction-per-session|tps",
+                                            "Overrides the transaction behavior of migrations, so that all migrations to be executed will run in one transaction.",
+                                            v => { TransactionPerSession = true; }
                                             }
                                     };
 
@@ -278,7 +290,9 @@ namespace FluentMigrator.Console
                 Timeout = Timeout,
                 ConnectionStringConfigPath = ConnectionStringConfigPath,
                 ApplicationContext = ApplicationContext,
-                Tags = Tags
+                Tags = Tags,
+                TransactionPerSession = TransactionPerSession,
+                ProviderSwitches = ProviderSwitches
             };
 
             new TaskExecutor(RunnerContext).Execute();

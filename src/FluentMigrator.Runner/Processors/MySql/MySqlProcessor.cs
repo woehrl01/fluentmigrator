@@ -19,11 +19,14 @@
 using System;
 using System.Data;
 using FluentMigrator.Builders.Execute;
+using FluentMigrator.Runner.Generators.MySql;
 
 namespace FluentMigrator.Runner.Processors.MySql
 {
     public class MySqlProcessor : GenericProcessorBase
     {
+        readonly MySqlQuoter quoter = new MySqlQuoter();
+
         public override string DatabaseType
         {
             get { return "MySql"; }
@@ -74,6 +77,12 @@ namespace FluentMigrator.Runner.Processors.MySql
             return false;
         }
 
+        public override bool DefaultValueExists(string schemaName, string tableName, string columnName, object defaultValue)
+        {
+            string defaultValueAsString = string.Format("%{0}%", FormatSqlEscape(defaultValue.ToString()));
+            return Exists("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = SCHEMA() AND TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}' AND COLUMN_DEFAULT LIKE '{2}'", FormatSqlEscape(tableName), FormatSqlEscape(columnName), defaultValueAsString);
+        }
+
         public override void Execute(string template, params object[] args)
         {
             if(Options.PreviewOnly) 
@@ -113,7 +122,7 @@ namespace FluentMigrator.Runner.Processors.MySql
 
         public override DataSet ReadTableData(string schemaName, string tableName)
         {
-            return Read("select * from {0}", tableName);
+            return Read("select * from {0}", quoter.QuoteTableName(tableName));
         }
 
         public override DataSet Read(string template, params object[] args)
