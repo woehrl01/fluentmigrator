@@ -27,7 +27,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
     
     public sealed class TableInfo
     {
-        private static readonly string query = "select rdb$relation_name from rdb$relations where rdb$relation_name = '{0}'";
+        private static readonly string query = "select rdb$relation_name from rdb$relations where lower(rdb$relation_name) = lower('{0}')";
 
         public string Name { get; private set; }
         public TableInfo(DataRow drMeta, FirebirdProcessor processor)
@@ -57,7 +57,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
                     from rdb$relation_fields as fields
                     left outer join rdb$fields as fieldinfo on (fields.rdb$field_source = fieldinfo.rdb$field_name)
                     left outer join rdb$types as fieldtype on ( (fieldinfo.rdb$field_type = fieldtype.rdb$type) and (fieldtype.rdb$field_name = 'RDB$FIELD_TYPE') )
-                    where (fields.rdb$relation_name = '{0}')
+                    where (lower(fields.rdb$relation_name) = lower('{0}'))
                     ";
 
         public string Name { get; private set; }

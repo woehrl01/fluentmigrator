@@ -23,7 +23,7 @@ namespace FluentMigrator.Runner.Generators.Firebird
             SetTypeMap(DbType.AnsiString, "BLOB SUB_TYPE TEXT", int.MaxValue);
             SetTypeMap(DbType.Binary, "BLOB SUB_TYPE BINARY");
             SetTypeMap(DbType.Binary, "BLOB SUB_TYPE BINARY", int.MaxValue);
-            SetTypeMap(DbType.Boolean, "CHAR(1)"); //no direct boolean support
+            SetTypeMap(DbType.Boolean, "SMALLINT"); //no direct boolean support
             SetTypeMap(DbType.Byte, "SMALLINT");
             SetTypeMap(DbType.Currency, "DECIMAL(18, 4)");
             SetTypeMap(DbType.Date, "DATE");

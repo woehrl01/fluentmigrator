@@ -58,37 +58,37 @@ namespace FluentMigrator.Runner.Processors.Firebird
         public override bool TableExists(string schemaName, string tableName)
         {
             CheckTable(schemaName);
-            return Exists("select rdb$relation_name from rdb$relations where (rdb$flags IS NOT NULL) and (rdb$relation_name = '{0}')", FormatToSafeName(tableName));
+            return Exists("select rdb$relation_name from rdb$relations where (rdb$flags IS NOT NULL) and (lower(rdb$relation_name) = lower('{0}'))", FormatToSafeName(tableName));
         }
 
         public override bool ColumnExists(string schemaName, string tableName, string columnName)
         {
             CheckTable(tableName);
             CheckColumn(tableName, columnName);
-            return Exists("select rdb$field_name from rdb$relation_fields where (rdb$relation_name = '{0}') and (rdb$field_name = '{1}')", FormatToSafeName(tableName), FormatToSafeName(columnName));
+            return Exists("select rdb$field_name from rdb$relation_fields where (lower(rdb$relation_name) = lower('{0}')) and (lower(rdb$field_name) = lower('{1}'))", FormatToSafeName(tableName), FormatToSafeName(columnName));
         }
 
         public override bool ConstraintExists(string schemaName, string tableName, string constraintName)
         {
             CheckTable(tableName);
-            return Exists("select rdb$constraint_name from rdb$relation_constraints where (rdb$relation_name = '{0}') and (rdb$constraint_name = '{1}')", FormatToSafeName(tableName), FormatToSafeName(constraintName));
+            return Exists("select rdb$constraint_name from rdb$relation_constraints where (lower(rdb$relation_name) = lower('{0}')) and (lower(rdb$constraint_name) = lower('{1}'))", FormatToSafeName(tableName), FormatToSafeName(constraintName));
         }
 
         public override bool IndexExists(string schemaName, string tableName, string indexName)
         {
             CheckTable(tableName);
-            return Exists("select rdb$index_name from rdb$indices where (rdb$relation_name = '{0}') and (rdb$index_name = '{1}') and (rdb$system_flag <> 1 OR rdb$system_flag IS NULL) and (rdb$foreign_key IS NULL)", FormatToSafeName(tableName), FormatToSafeName(indexName));
+            return Exists("select rdb$index_name from rdb$indices where (lower(rdb$relation_name) = lower('{0}')) and (lower(rdb$index_name) = lower('{1}')) and (rdb$system_flag <> 1 OR rdb$system_flag IS NULL) and (rdb$foreign_key IS NULL)", FormatToSafeName(tableName), FormatToSafeName(indexName));
         }
 
         public override bool SequenceExists(string schemaName, string sequenceName)
         {
-            return Exists("select rdb$generator_name from rdb$generators where rdb$generator_name = '{0}'", FormatToSafeName(sequenceName));
+            return Exists("select rdb$generator_name from rdb$generators where lower(rdb$generator_name) = lower('{0}')", FormatToSafeName(sequenceName));
         }
 
         public virtual bool TriggerExists(string schemaName, string tableName, string triggerName)
         {
             CheckTable(tableName);
-            return Exists("select rdb$trigger_name from rdb$triggers where (rdb$relation_name = '{0}') and (rdb$trigger_name = '{1}')", FormatToSafeName(tableName), FormatToSafeName(triggerName));
+            return Exists("select rdb$trigger_name from rdb$triggers where (lower(rdb$relation_name) = lower('{0}')) and (lower(rdb$trigger_name) = lower('{1}'))", FormatToSafeName(tableName), FormatToSafeName(triggerName));
         }
 
         public override DataSet ReadTableData(string schemaName, string tableName)
@@ -331,7 +331,12 @@ namespace FluentMigrator.Runner.Processors.Firebird
                 throw new NotSupportedException(String.Format("Expression can't be undone: {0}", fbExpression.ToString()));
             }
 
+            if (processedExpressions.Count == 0)
+            {
+                processedExpressions.Push(new Stack<FirebirdProcessedExpressionBase>());
+            }
             processedExpressions.Peek().Push(fbExpression);
+
         }
 
         #endregion
