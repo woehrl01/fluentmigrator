@@ -16,7 +16,7 @@
 //
 #endregion
 
-namespace FluentMigrator.Builders.Schema.Index
+namespace FluentMigrator.Builders.Schema.Constraint
 {
     public interface ISchemaConstraintSyntax
     {

@@ -17,6 +17,7 @@
 #endregion
 
 using FluentMigrator.Builders.Schema.Column;
+using FluentMigrator.Builders.Schema.Constraint;
 using FluentMigrator.Infrastructure;
 using FluentMigrator.Builders.Schema.Index;
 

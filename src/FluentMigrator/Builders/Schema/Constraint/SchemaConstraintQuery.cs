@@ -16,9 +16,10 @@
 //
 #endregion
 
+using FluentMigrator.Builders.Schema.Index;
 using FluentMigrator.Infrastructure;
 
-namespace FluentMigrator.Builders.Schema.Index
+namespace FluentMigrator.Builders.Schema.Constraint
 {
     public class SchemaConstraintQuery : ISchemaConstraintSyntax
     {
