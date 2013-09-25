@@ -16,16 +16,10 @@
 //
 #endregion
 
-using FluentMigrator.Builders.Schema.Column;
-using FluentMigrator.Builders.Schema.Index;
-
-namespace FluentMigrator.Builders.Schema.Table
+namespace FluentMigrator.Builders.Schema.Index
 {
-    public interface ISchemaTableSyntax
+    public interface ISchemaConstraintSyntax
     {
         bool Exists();
-        ISchemaColumnSyntax Column(string column);
-        ISchemaIndexSyntax Index(string indexName);
-        ISchemaConstraintSyntax Constraint(string constraintName);
     }
 }
