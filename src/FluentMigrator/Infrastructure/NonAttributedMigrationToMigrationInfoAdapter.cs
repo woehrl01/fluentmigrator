@@ -31,6 +31,8 @@ namespace FluentMigrator.Infrastructure
         }
 
         public string Description { get; private set; }
+        public string Author { get; private set; }
+        public string DbVersion { get; private set; }
 
         public long Version
         {
