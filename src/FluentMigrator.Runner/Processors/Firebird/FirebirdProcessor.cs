@@ -371,7 +371,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
             CheckColumn(expression.TableName, expression.Column.Name);
             FirebirdSchemaProvider schema = new FirebirdSchemaProvider(this);
             FirebirdTableSchema table = schema.GetTableSchema(expression.TableName);
-            ColumnDefinition colDef = table.Definition.Columns.First(x => x.Name == expression.Column.Name);
+            ColumnDefinition colDef = table.Definition.Columns.First(x => x.Name.ToLowerInvariant() == expression.Column.Name.ToLowerInvariant());
 
             //Change nullable constraint
             if (colDef.IsNullable != expression.Column.IsNullable)
