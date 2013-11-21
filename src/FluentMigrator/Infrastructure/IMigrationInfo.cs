@@ -22,6 +22,8 @@ namespace FluentMigrator.Infrastructure
     {
         long Version { get; }
         string Description { get; }
+        string Author { get; }
+        string DbVersion { get; }
         TransactionBehavior TransactionBehavior { get; }
         IMigration Migration { get; }
         object Trait(string name);

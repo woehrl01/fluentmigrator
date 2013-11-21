@@ -25,22 +25,26 @@ namespace FluentMigrator.Infrastructure
         private readonly Dictionary<string, object> _traits = new Dictionary<string, object>();
 
         public MigrationInfo(long version, TransactionBehavior transactionBehavior, IMigration migration)
-            : this(version, null, transactionBehavior, migration)
+            : this(version, null, null, null, transactionBehavior, migration)
         {
         }
 
-        public MigrationInfo(long version, string description, TransactionBehavior transactionBehavior, IMigration migration)
+        public MigrationInfo(long version, string dbVersion, string description, string author, TransactionBehavior transactionBehavior, IMigration migration)
         {
             if (migration == null) throw new ArgumentNullException("migration");
 
             Version = version;
             Description = description;
             TransactionBehavior = transactionBehavior;
+            DbVersion = dbVersion;
+            Author = author;
             Migration = migration;
         }
 
         public long Version { get; private set; }
         public string Description { get; private set; }
+        public string Author { get; private set; }
+        public string DbVersion { get; private set; }
         public TransactionBehavior TransactionBehavior { get; private set; }
         public IMigration Migration { get; private set; }
 
