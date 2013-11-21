@@ -113,7 +113,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
             {
                 SchemaName = String.Empty,
                 TableName = expression.TableName,
-                Column = table.Definition.Columns.First(x => x.Name == expression.Column.Name)
+                Column = table.Definition.Columns.First(x => x.Name.ToLowerInvariant() == expression.Column.Name.ToLowerInvariant())
             };
             UndoExpressions.Add(alter);
             
