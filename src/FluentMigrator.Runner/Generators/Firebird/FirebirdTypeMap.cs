@@ -36,10 +36,10 @@ namespace FluentMigrator.Runner.Generators.Firebird
             SetTypeMap(DbType.Int32, "INTEGER");
             SetTypeMap(DbType.Int64, "BIGINT");
             SetTypeMap(DbType.Single, "FLOAT");
-            SetTypeMap(DbType.StringFixedLength, "CHAR(255) CHARACTER SET UTF8"); //charset utf8 may fail at index creation, because of to small database pagesize
-            SetTypeMap(DbType.StringFixedLength, "CHAR($size) CHARACTER SET UTF8", FirebirdMaxUnicodeCharSize);
-            SetTypeMap(DbType.String, "VARCHAR(255) CHARACTER SET UTF8");
-            SetTypeMap(DbType.String, "VARCHAR($size) CHARACTER SET UTF8", FirebirdMaxUnicodeCharSize);
+            SetTypeMap(DbType.StringFixedLength, "CHAR(255) CHARACTER SET NONE"); //charset utf8 may fail at index creation, because of to small database pagesize
+            SetTypeMap(DbType.StringFixedLength, "CHAR($size) CHARACTER SET NONE", FirebirdMaxUnicodeCharSize);
+            SetTypeMap(DbType.String, "VARCHAR(255) CHARACTER SET NONE");
+            SetTypeMap(DbType.String, "VARCHAR($size) CHARACTER SET NONE", FirebirdMaxUnicodeCharSize);
             SetTypeMap(DbType.String, "BLOB SUB_TYPE TEXT", int.MaxValue);
             SetTypeMap(DbType.Time, "TIME");
         }
