@@ -124,7 +124,16 @@ namespace FluentMigrator.Runner
         {
             get
             {
-                return Processor.ColumnExists(VersionTableMetaData.SchemaName, VersionTableMetaData.TableName, "Description");
+                return Processor.ColumnExists(VersionTableMetaData.SchemaName, VersionTableMetaData.TableName, VersionTableMetaData.DescriptionColumnName);
+            }
+        }
+
+        public bool OwnsVersionSchema
+        {
+            get
+            {
+                IVersionTableMetaDataExtended versionTableMetaDataExtended = VersionTableMetaData as IVersionTableMetaDataExtended;
+                return versionTableMetaDataExtended == null || versionTableMetaDataExtended.OwnsSchema;
             }
         }
 
@@ -162,7 +171,7 @@ namespace FluentMigrator.Runner
             
             foreach (DataRow row in dataSet.Tables[0].Rows)
             {
-                _versionInfo.AddAppliedMigration(long.Parse(row[0].ToString()));
+                _versionInfo.AddAppliedMigration(long.Parse(row[VersionTableMetaData.ColumnName].ToString()));
             }
         }
 
@@ -171,7 +180,7 @@ namespace FluentMigrator.Runner
             var expression = new DeleteTableExpression { TableName = VersionTableMetaData.TableName, SchemaName = VersionTableMetaData.SchemaName };
             expression.ExecuteWith(Processor);
 
-            if (!string.IsNullOrEmpty(VersionTableMetaData.SchemaName))
+            if (OwnsVersionSchema && !string.IsNullOrEmpty(VersionTableMetaData.SchemaName))
             {
                 var schemaExpression = new DeleteSchemaExpression { SchemaName = VersionTableMetaData.SchemaName };
                 schemaExpression.ExecuteWith(Processor);
