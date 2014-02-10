@@ -161,18 +161,18 @@ namespace FluentMigrator.Runner.Processors.Firebird
             if (String.IsNullOrEmpty(src))
                 return DBNull.Value;
 
-            if (src.StartsWith("DEFAULT "))
+            if (src.StartsWith("DEFAULT ", StringComparison.InvariantCultureIgnoreCase))
             {
                 string value = src.Substring(8).Trim();
                 if (value.StartsWith("'"))
                 {
                     return value.TrimStart('\'').TrimEnd('\'');
                 }
-                else if (value == "CURRENT_TIMESTAMP")
+                else if (value.Equals("current_timestamp", StringComparison.InvariantCultureIgnoreCase))
                 {
                     return SystemMethods.CurrentDateTime;
                 }
-                else if (value == "gen_uuid()")
+                else if (value.Equals("gen_uuid()", StringComparison.InvariantCultureIgnoreCase))
                 {
                     return SystemMethods.NewGuid;
                 }

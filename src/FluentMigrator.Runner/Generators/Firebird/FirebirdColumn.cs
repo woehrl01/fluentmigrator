@@ -35,6 +35,7 @@ namespace FluentMigrator.Runner.Generators.Firebird
                     return "gen_uuid()";
                 case SystemMethods.CurrentDateTime:
                     return "CURRENT_TIMESTAMP";
+                
             }
 
             throw new NotImplementedException();
