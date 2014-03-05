@@ -42,7 +42,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
             if (fbOptions == null)
                 throw new ArgumentNullException("fbOptions");
             FBOptions = fbOptions;
-            truncator = new FirebirdTruncator(FBOptions.TruncateLongNames);
+            truncator = new FirebirdTruncator(FBOptions.TruncateLongNames, FBOptions.PackKeyNames);
             ClearLocks();
             ClearExpressions();
             ClearDDLFollowers();

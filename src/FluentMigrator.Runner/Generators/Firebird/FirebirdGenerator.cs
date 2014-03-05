@@ -21,7 +21,7 @@ namespace FluentMigrator.Runner.Generators.Firebird
                 throw new ArgumentNullException("fbOptions");
 
             FBOptions = fbOptions;
-            truncator = new FirebirdTruncator(FBOptions.TruncateLongNames);
+            truncator = new FirebirdTruncator(FBOptions.TruncateLongNames, FBOptions.PackKeyNames);
         }
         
         //It's kind of a hack to mess with system tables, but this is the cleanest and time-tested method to alter the nullable constraint.
