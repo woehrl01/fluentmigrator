@@ -475,7 +475,16 @@ namespace FluentMigrator.Runner.Processors.Firebird
                 InternalProcess((Generator as FirebirdGenerator).GenerateSetType(expression.Column));
             }
 
-            bool identitySequenceExists = SequenceExists(String.Empty, GetSequenceName(expression.TableName, expression.Column.Name));
+            bool identitySequenceExists;
+            try
+            {
+                identitySequenceExists = SequenceExists(String.Empty, GetSequenceName(expression.TableName, expression.Column.Name));
+            }
+            catch (ArgumentException)
+            {
+                identitySequenceExists = false;
+            }
+             
 
             //Adjust identity generators
             if (expression.Column.IsIdentity)
@@ -607,17 +616,6 @@ namespace FluentMigrator.Runner.Processors.Firebird
         public override void Process(Expressions.DeleteTableExpression expression)
         {
             truncator.Truncate(expression);
-            CheckTable(expression.TableName);
-            LockTable(expression.TableName);
-            FirebirdSchemaProvider schema = new FirebirdSchemaProvider(this);
-            TableDefinition table = schema.GetTableDefinition(expression.TableName);
-            foreach (ColumnDefinition colDef in table.Columns)
-            {
-                if (SequenceExists(String.Empty, GetSequenceName(expression.TableName, colDef.Name)))
-                {
-                    DeleteSequenceForIdentity(expression.TableName, colDef.Name);
-                }
-            }
             CheckTable(expression.TableName);
             LockTable(expression.TableName);
             RegisterExpression<DeleteTableExpression>(expression);
