@@ -29,7 +29,7 @@ namespace FluentMigrator.Runner.Generators.SqlServer
             SetTypeMap(DbType.Currency, "MONEY");
             SetTypeMap(DbType.Date, "DATETIME");
             SetTypeMap(DbType.DateTime, "DATETIME");
-            SetTypeMap(DbType.Decimal, "DECIMAL(19,5)");
+            SetTypeMap(DbType.Decimal, "DECIMAL(9,4)");
             SetTypeMap(DbType.Decimal, "DECIMAL($size,$precision)", DecimalCapacity);
             SetTypeMap(DbType.Double, "DOUBLE PRECISION");
             SetTypeMap(DbType.Guid, "UNIQUEIDENTIFIER");

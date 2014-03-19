@@ -28,7 +28,7 @@ namespace FluentMigrator.Runner.Generators.Firebird
             SetTypeMap(DbType.Currency, "DECIMAL(18, 4)");
             SetTypeMap(DbType.Date, "DATE");
             SetTypeMap(DbType.DateTime, "TIMESTAMP");
-            SetTypeMap(DbType.Decimal, "DECIMAL(14,5)");
+            SetTypeMap(DbType.Decimal, "DECIMAL(9,4)");
             SetTypeMap(DbType.Decimal, "DECIMAL($size, $precision)", DecimalCapacity);
             SetTypeMap(DbType.Double, "DOUBLE PRECISION"); //64 bit double precision
             SetTypeMap(DbType.Guid, "CHAR(16) CHARACTER SET OCTETS"); //no guid support, "only" uuid is supported(via gen_uuid() built-in function)
