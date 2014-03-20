@@ -181,11 +181,14 @@ namespace FluentMigrator.Runner.Processors.Firebird
         {
             Announcer.Say("Committing and Retaining Transaction");
 
-            using (var command = Factory.CreateCommand("COMMIT RETAIN", Connection, Transaction))
+            CommitTransaction();
+            BeginTransaction();
+
+            /*using (var command = Factory.CreateCommand("COMMIT RETAIN", Connection, Transaction))
             {
                 command.CommandTimeout = Options.Timeout;
                 command.ExecuteNonQuery();
-            }
+            }*/
             processedExpressions.Push(new Stack<FirebirdProcessedExpressionBase>());
         }
 
