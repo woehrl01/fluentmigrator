@@ -17,28 +17,30 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using FluentMigrator.Helpers;
 
 namespace FluentMigrator.Infrastructure
 {
     public class MigrationInfo : IMigrationInfo
     {
         private readonly Dictionary<string, object> _traits = new Dictionary<string, object>();
+        private LazyLoader<IMigration> _lazyMigration;
 
         public MigrationInfo(long version, TransactionBehavior transactionBehavior, IMigration migration)
-            : this(version, null, null, null, transactionBehavior, migration)
+            : this(version, null, null, null, transactionBehavior,() => migration)
         {
         }
 
-        public MigrationInfo(long version, string dbVersion, string description, string author, TransactionBehavior transactionBehavior, IMigration migration)
+        public MigrationInfo(long version, string dbVersion, string description, string author, TransactionBehavior transactionBehavior, Func<IMigration> migrationFunc)
         {
-            if (migration == null) throw new ArgumentNullException("migration");
+            if (migrationFunc == null) throw new ArgumentNullException("migrationFunc");
 
             Version = version;
             Description = description;
             TransactionBehavior = transactionBehavior;
             DbVersion = dbVersion;
+            _lazyMigration = new LazyLoader<IMigration>(migrationFunc);
             Author = author;
-            Migration = migration;
         }
 
         public long Version { get; private set; }
@@ -46,7 +48,13 @@ namespace FluentMigrator.Infrastructure
         public string Author { get; private set; }
         public string DbVersion { get; private set; }
         public TransactionBehavior TransactionBehavior { get; private set; }
-        public IMigration Migration { get; private set; }
+        public IMigration Migration
+        {
+            get
+            {
+                return _lazyMigration.Value;
+            }
+        }
 
         public object Trait(string name)
         {
