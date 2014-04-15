@@ -521,9 +521,16 @@ namespace FluentMigrator.Runner.Processors.Firebird
             LockColumn(expression.TableName, expression.ColumnNames);
             foreach (string columnName in expression.ColumnNames)
             {
-                if (SequenceExists(String.Empty, GetSequenceName(expression.TableName, columnName)))
+                try
                 {
-                    DeleteSequenceForIdentity(expression.TableName, columnName);
+                    if (SequenceExists(String.Empty, GetSequenceName(expression.TableName, columnName)))
+                    {
+                        DeleteSequenceForIdentity(expression.TableName, columnName);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    continue;
                 }
             }
             RegisterExpression<DeleteColumnExpression>(expression);
@@ -876,7 +883,16 @@ namespace FluentMigrator.Runner.Processors.Firebird
         {
             CheckTable(tableName);
             LockTable(tableName);
-            string sequenceName = GetSequenceName(tableName, columnName);
+
+            string sequenceName;
+            try{
+                sequenceName = GetSequenceName(tableName, columnName);
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
+
             DeleteSequenceExpression deleteSequence = null;
             if (SequenceExists(String.Empty, sequenceName))
             {
