@@ -22,7 +22,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
             Processor = processor;
             Expression = expression;
             this.expressionType = expressionType;
-            //if (processor.FBOptions.UndoEnabled)
+            if (processor.FBOptions.UndoEnabled)
                 SetupUndoExpressions();
         }
 
