@@ -22,7 +22,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
             Processor = processor;
             Expression = expression;
             this.expressionType = expressionType;
-            if (processor.FBOptions.UndoEnabled)
+            // if (processor.FBOptions.UndoEnabled)
                 SetupUndoExpressions();
         }
 
@@ -189,7 +189,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
                     }
                     if (match)
                     {
-                        UpdateDataExpression update = new UpdateDataExpression() { SchemaName = String.Empty, TableName = expression.TableName, IsAllRows = false };
+                        UpdateDataExpression update = new UpdateDataExpression() { SchemaName = String.Empty, TableName = expression.TableName, IsAllRows = false, Set = new List<KeyValuePair<string, object>>(), Where = new List<KeyValuePair<string, object>>() };
                         foreach (var set in expression.Set)
                         {
                             update.Set.Add(new KeyValuePair<string, object>(set.Key, dr[set.Key]));
@@ -348,7 +348,7 @@ namespace FluentMigrator.Runner.Processors.Firebird
                         CanUndo = false;
                         return;
                     }
-                    UpdateDataExpression update = new UpdateDataExpression() { TableName = expression.TableName, IsAllRows = false };
+                    UpdateDataExpression update = new UpdateDataExpression() { TableName = expression.TableName, IsAllRows = false, Set = new List<KeyValuePair<string, object>>(), Where = new List<KeyValuePair<string, object>>()};
                     foreach (string columnName in expression.ColumnNames)
                     {
                         update.Set.Add(new KeyValuePair<string, object>(columnName, dr[columnName]));
