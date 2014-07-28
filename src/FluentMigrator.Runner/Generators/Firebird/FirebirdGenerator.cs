@@ -27,7 +27,7 @@ namespace FluentMigrator.Runner.Generators.Firebird
         //It's kind of a hack to mess with system tables, but this is the cleanest and time-tested method to alter the nullable constraint.
         // It's even mentioned in the firebird official FAQ.
         // Currently the only drawback is that the integrity is not checked by the engine, you have to ensure it manually
-        public string AlterColumnSetNullable { get { return "UPDATE RDB$RELATION_FIELDS SET RDB$NULL_FLAG = {0} WHERE RDB$RELATION_NAME = {1} AND RDB$FIELD_NAME = {2}"; } }
+        public string AlterColumnSetNullable { get { return "UPDATE RDB$RELATION_FIELDS SET RDB$NULL_FLAG = {0} WHERE lower(rdb$relation_name) = lower({1}) AND lower(RDB$FIELD_NAME) = lower({2})"; } }
         
         public string AlterColumnSetType { get { return "ALTER TABLE {0} ALTER COLUMN {1} TYPE {2}"; } }
 
