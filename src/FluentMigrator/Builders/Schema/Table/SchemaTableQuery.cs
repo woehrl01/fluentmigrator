@@ -55,5 +55,10 @@ namespace FluentMigrator.Builders.Schema.Table
         {
             return new SchemaConstraintQuery(_schemaName, _tableName, constraintName, _context);
         }
+
+        public ISchemaConstraintSyntax Constraint(string constraintName)
+        {
+            return new SchemaConstraintQuery(_schemaName, _tableName, constraintName, _context);
+        }
     }
 }

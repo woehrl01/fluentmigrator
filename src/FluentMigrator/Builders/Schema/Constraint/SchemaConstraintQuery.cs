@@ -16,7 +16,6 @@
 //
 #endregion
 
-using FluentMigrator.Builders.Schema.Index;
 using FluentMigrator.Infrastructure;
 
 namespace FluentMigrator.Builders.Schema.Constraint
@@ -25,20 +24,20 @@ namespace FluentMigrator.Builders.Schema.Constraint
     {
         private readonly string _schemaName;
         private readonly string _tableName;
-        private readonly string _indexName;
+        private readonly string _constraintName;
         private readonly IMigrationContext _context;
 
-        public SchemaConstraintQuery(string schemaName, string tableName, string indexName, IMigrationContext context)
+        public SchemaConstraintQuery(string schemaName, string tableName, string constraintName, IMigrationContext context)
         {
             _schemaName = schemaName;
             _tableName = tableName;
-            _indexName = indexName;
+            _constraintName = constraintName;
             _context = context;
         }
 
         public bool Exists()
         {
-            return _context.QuerySchema.ConstraintExists(_schemaName, _tableName, _indexName);
+            return _context.QuerySchema.ConstraintExists(_schemaName, _tableName, _constraintName);
         }
     }
 }
